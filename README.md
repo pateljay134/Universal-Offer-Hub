@@ -1,4 +1,5 @@
 # Universal-Offer-Hub
+
 > One Chrome / Edge / Brave extension that runs every credit-card offer autopilot you need — Chase, American Express, Capital One, and Walgreens — and keeps a fully local, searchable history of every offer you've ever added across every card.
 
 ![License](https://img.shields.io/github/license/pateljay134/Universal-Offer-Hub.svg)
@@ -137,11 +138,33 @@ Capital One has no file in `bookmarklets/` — it is the single longest script a
 
 ---
 
-## 🛠 Adding a new source
+## 🛠 Requesting or contributing a new source
 
-Three steps:
+A "source" is a website whose offers the extension can scrape. Each source needs its own autopilot — the DOM is different on every site, so a generic scraper doesn't work. There are two ways to get a new source added:
 
-1. Add a record to `window.UOH_SOURCES` in `lib/sources.js`:
+### Option A — You want a new site supported (no coding required)
+
+[Open an issue](../../issues/new) and include:
+
+1. **Which site / which page.** The exact URL of the offers page (after you've logged in), e.g. `https://www.target.com/circle/offers`.
+2. **The full HTML of that page.** This is the only way I can write the scraping selectors. To grab it:
+   - Open the offers page in Chrome.
+   - Press **F12** (or **Cmd+Option+I** on Mac) to open DevTools.
+   - Click the **Elements** tab.
+   - Right-click the very top `<html>` line → **Copy → Copy outerHTML**.
+   - Paste it into a `.html` file and attach it to the issue (or paste into a [GitHub gist](https://gist.github.com) and link it — easier for large pages).
+
+   **Please scrub anything sensitive before sharing** — search the HTML for your full name, full card numbers, customer ID, email, address, etc., and replace with `XXXX`. The selectors I need only depend on the offer-tile markup, not your personal data.
+
+3. **(Optional but very helpful)** A second HTML dump of the site's "Already added / Clipped" page if it has one, so the autopilot can also harvest your existing offer history.
+
+I'll review the HTML, write the autopilot, and ship it in the next release.
+
+### Option B — You already have a working script
+
+If you've written an autopilot for the site yourself (or have one as a bookmarklet), please open a Pull Request with all three of:
+
+1. A new record in `window.UOH_SOURCES` in `lib/sources.js`:
 
    ```js
    {
@@ -155,7 +178,7 @@ Three steps:
    }
    ```
 
-2. Add a host-permission entry to `manifest.json`:
+2. A matching host-permission entry in `manifest.json`:
 
    ```jsonc
    "host_permissions": [
@@ -164,9 +187,21 @@ Three steps:
    ]
    ```
 
-3. In `content/scraper.js`, add a `host.indexOf(...)` branch with the autopilot logic. Call `saveOffer(key, merchant, value, "Target", { ... })` to persist each offer.
+3. A new `host.indexOf("target.com") > -1` branch inside `content/scraper.js` containing the autopilot logic. Each offer your script visits should call:
 
-The popup's auto-detect, chip filter, and search will pick up the new source on the next reload.
+   ```js
+   saveOffer(
+     "target_" + cardId + "_" + merchant.replace(/\W/g, ""),
+     merchant, value, "Target",
+     { status: "added", card: cardLabel, cardId: cardId, expiresTs: parseExpiresTs(expiry) }
+   );
+   ```
+
+   so the hub keys it consistently with the other sources. The popup's auto-detect, chip filter, and search will pick the new source up on the next reload.
+
+If you have a working script for a new site, **please open a Pull Request for review against [github.com/pateljay134/Universal-Offer-Hub](https://github.com/pateljay134/Universal-Offer-Hub/)** — once it's reviewed and merged, everyone using the extension gets that source for free, and we can keep expanding the hub together.
+
+Either path is welcome — Option A is the most common, Option B is appreciated when you've already done the hard part.
 
 ---
 
