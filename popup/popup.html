@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Universal Offer Hub</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">UO</div>
+      <div class="brand-text">
+        <div class="title">Universal Offer Hub</div>
+        <div class="subtitle">All local. No network.</div>
+      </div>
+    </div>
+    <button id="export-btn" class="btn-ghost" title="Export every saved offer to CSV">CSV</button>
+  </header>
+
+  <!-- Auto-detected Run section. Populated by popup.js -->
+  <section id="run-card" class="run-card" hidden>
+    <div class="run-card-meta">
+      <span class="dot" id="run-dot"></span>
+      <span class="run-detected" id="run-detected"></span>
+    </div>
+    <button id="run-btn" class="run-btn">
+      <span class="run-btn-label" id="run-btn-label">Run Autopilot</span>
+      <span class="run-btn-arrow" aria-hidden="true">▶</span>
+    </button>
+    <p class="run-blurb" id="run-blurb"></p>
+  </section>
+
+  <!-- Fallback when not on a supported page -->
+  <section id="quick-open" class="quick-open" hidden>
+    <div class="quick-open-title">Not on a supported page</div>
+    <div class="quick-open-subtitle">Search saved offers below or open a site to run its autopilot.</div>
+    <div class="quick-open-grid" id="quick-open-grid"></div>
+  </section>
+
+  <section class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-lbl">Saved</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-cards">0</div>
+      <div class="stat-lbl">Sources</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-recent">0</div>
+      <div class="stat-lbl">Last Run</div>
+    </div>
+  </section>
+
+  <section class="search-row">
+    <input id="search" class="search-input" type="search"
+           placeholder="Search — e.g. road runner, Samsung 10%, Best Buy" autocomplete="off">
+    <button id="clear-search" class="btn-ghost" title="Clear">×</button>
+  </section>
+
+  <section class="filters">
+    <div class="chip-row" id="source-chips" aria-label="Filter by source"></div>
+    <div class="chip-row" id="type-chips" aria-label="Filter by offer type">
+      <button class="chip active" data-type="ALL">All</button>
+      <button class="chip" data-type="PERCENT">%</button>
+      <button class="chip" data-type="DOLLAR">$</button>
+      <button class="chip" data-type="MILES">Miles</button>
+      <button class="chip" data-type="MULTI">Multi</button>
+    </div>
+    <div class="sort-row">
+      <label for="sort-select" class="sort-label">Sort</label>
+      <select id="sort-select" class="sort-select">
+        <option value="best">Best match</option>
+        <option value="expiry">Expiring soonest</option>
+        <option value="value">Value (high → low)</option>
+        <option value="az">A → Z</option>
+        <option value="recent">Recently saved</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="results-meta">
+    <span id="results-count">0 results</span>
+    <button id="reset-source" class="btn-ghost" title="Clear all saved offers">Reset…</button>
+  </section>
+
+  <section class="results" id="results"></section>
+
+  <footer class="footer-hint">Feedback or issues: <a href="https://www.reddit.com/user/pateljay134/" target="_blank" rel="noopener noreferrer">u/pateljay134</a> on Reddit</footer>
+
+  <script src="../lib/sources.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
+
+
