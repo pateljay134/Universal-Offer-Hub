@@ -1,265 +1,155 @@
-# Universal-Offer-Hub
+# Universal Offer Hub
 
-> One Chrome / Edge / Brave extension that runs every credit-card offer autopilot you need — Chase, American Express, Capital One, and Walgreens — and keeps a fully local, searchable history of every offer you've ever added across every card.
+A Chrome extension that adds every available card offer (Chase, American Express, Capital One) and clips every store coupon (Walgreens, Safeway) for you, then keeps all of them in one searchable hub on your own computer. Nothing is stored or sent anywhere else, except to an AI you connect, for your own questions.
 
 ![License](https://img.shields.io/github/license/pateljay134/Universal-Offer-Hub.svg)
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange.svg)
-![Network calls](https://img.shields.io/badge/network%20calls-zero-brightgreen.svg)
-![Status](https://img.shields.io/badge/status-active-success.svg)
+![Servers](https://img.shields.io/badge/servers-none-brightgreen.svg)
 
 ---
 
-## 🔒 Privacy by design (just like Apple 😉)
+## What it does
 
-This is **not** like the offer extensions you find on the Chrome Web Store, Edge add-ons, or any other marketplace. Most of those:
+- **One-click autopilots** for Chase, Amex, Capital One, Walgreens and Safeway. Open the site, click the toolbar icon, press **Run**. Every offer it touches is saved to the hub, per card.
+- **Amex auto-add (opt-in).** When you open Amex while signed in, it reads every credit card on that login in a background tab and adds each offer to the right card. Details below.
+- **Dashboard.** A full-page table of every active offer. Click a column title to sort; the ▾ beside it filters by card (an issuer's cards all at once, or one at a time), offer type, category or expiry. Views for New this week and Expiring soon, and card nicknames ("Mom Plat").
+- **Ask AI.** A chat about your offers, answered by ChatGPT, Claude or Gemini with your own key (or by plain rules without one). Follow-ups such as "only Chase" or "as CSV" build on the last answer, and every reply lists all its matches.
+- **Use your offers in AI apps.** One click hands them to ChatGPT, Claude or Gemini in the browser, and a one-time setup lets the Claude Desktop app read them live. **Copy** takes any list you narrow down.
+- **Offer reminders.** Visit `adidas.com` or `bestbuy.com` and a small note lists the offers you already have there and which card holds them.
 
-- Make **network calls to their own servers** with your customer IDs, cookies, session tokens, or scraped account data.
-- Auto-update silently with new permissions you didn't approve the first time.
-- Ship minified / obfuscated code you can't realistically audit.
+## Privacy
 
-Universal Offer Hub is built on privacy by design:
+**Offer Hub keeps your offers on your computer and never stores or sends them anywhere else, except to the AI you connect yourself (ChatGPT, Claude or Gemini), and only for the questions you ask.**
 
-- **Zero network calls.** Not to any server, not to any analytics service, not anywhere. There is no remote backend. Open DevTools' Network tab while the autopilot runs — you'll see nothing leaving the extension.
-- **Everything stays on your machine.** All offers live in your own browser's local storage (`chrome.storage.local`), inside your Chrome profile, on your disk. Nobody else — including the author — can see them.
-- **Your identity is never read.** No customer IDs, no cookies, no session tokens, no account numbers. The extension only looks at on-screen text and clicks visible buttons — exactly like a human would.
-- **Fully transparent source code.** Every file is plain JavaScript / HTML / CSS. No minification, no bundler, no obfuscation. Open any file in a text editor before installing — you can read every line yourself.
-- **No silent updates.** Because it's loaded as an unpacked extension from a folder you control, it can't update behind your back. You install only what you've already inspected, and you decide when to replace the folder with a newer version.
-- **Minimal permissions.** `manifest.json` requests host access only for the four supported sites (`chase.com`, `americanexpress.com`, `capitalone.com`, `walgreens.com`) plus `storage` for the hub. No `https://*/*` wildcard, no remote scripts.
+- No server, no account, no analytics. Your offers live in Chrome (`chrome.storage.local`) and, if you turn on the live copy, in the folder you pick.
+- Ask AI: each question sends the AI you connected (OpenAI, Anthropic or Google) your question and the offers that match it: store, offer, card name and ending, expiry and category. Your key stays in this browser and goes only to its own company. With no AI connected, nothing leaves the browser.
+- Open AI chat and the Claude Desktop app work only when you use them. You give the chat site the file yourself, and Claude Desktop reads the live copy on your computer and sends what it looks up to Anthropic as part of your chat. Anything you copy into another app goes wherever that app sends it.
+- Amex auto-add opens Amex's own website in a background tab: the same pages you'd open yourself, with your existing sign-in.
+- Plain, unminified JavaScript. You install it unpacked from a folder you control, so it can't update itself behind your back.
+- The `<all_urls>` permission exists for offer reminders. The service worker reads only the hostname of the page you're on and compares it with your saved offers. Turn reminders off in the popup and it stops.
 
----
+## Install
 
-## ⚡ Features
+1. Download this repo (**Code → Download ZIP**) and unzip `Universal-Offer-Hub.zip` somewhere stable, such as `~/Documents/Universal-Offer-Hub`.
+2. Open `chrome://extensions` (also works in Edge and Brave) and turn on **Developer mode**.
+3. Click **Load unpacked** and pick the extracted `Universal-Offer-Hub` folder.
+4. Pin the icon.
 
-- **Four autopilots, one toolbar icon.** Auto-detects the active tab and shows the right coloured **Run** button for the site you're on.
-- **Cross-card hub.** Every offer the autopilot touches is mirrored into a single, searchable database you can open at any time.
-- **Multi-card aware.** Same merchant on two different cards = two distinct offers. The extension scopes each entry by card (last-4 / accountId) so running on your Platinum doesn't overwrite your Blue Cash.
-- **Harvests history, not just new clicks.** AMEX → opens the "Added to Card → View All" page and reads every existing offer. Chase → opens the Added Offers page and scrapes every tile.
-- **Expiry-aware.** Each offer stores its expiration date. The hub shows `42 days left` / `Expires today` / `Expired` chips and can sort by **Expiring soonest**.
-- **Reward-based offer typing.** "Spend $30, earn 1,500 miles" is classified as MILES (the reward), not DOLLAR (the trigger).
-- **Smart search.** `road runner`, `Road-Runner`, `RoadRunner`, and `roadrunner` all match the same merchant. Spaces, dashes, casing, and punctuation are ignored.
-- **One-tap CSV export.**
-- **Persists across browser restarts.** Close Chrome, reboot, come back tomorrow — your full offer history is still there.
+To update, replace the folder's contents with a newer release and click the reload icon on the extension's card. Moving the folder or removing the extension deletes its saved offers; disabling it keeps them.
 
----
+## Use
 
-## 📦 Install
+1. Open Chase, Amex, Capital One, Walgreens or Safeway and sign in.
+2. Click the toolbar icon. It detects the site and shows **Run … Autopilot**. Click it; the on-page panel shows progress.
+3. Search everything from the popup, or click **Dashboard** for the full view.
 
-Download or clone this repo first (green **Code** button → **Download ZIP**, then extract somewhere stable like `~/Documents/Universal-Offer-Hub`).
+The popup and the dashboard count offers the same way: an offer saved on two cards counts once, and expired offers are left out (the popup says how many) until **Clean expired** removes them. An offer that ends today counts until midnight.
 
-### Chrome / Edge / Brave (and other Chromium browsers)
+Search ignores spaces, dashes and case (`road runner`, `RoadRunner` and `Road-Runner` all match) and also matches card nicknames and categories.
 
-1. Open `chrome://extensions` (or `edge://extensions` / `brave://extensions`).
-2. Toggle **Developer mode** on (top-right corner).
-3. Click **Load unpacked** and select the extracted folder.
-4. Pin the icon to your toolbar so it's one click away.
+## Amex auto-add
 
-To **update** later: replace the folder contents with a newer release, then click the circular reload icon on the extension's card in `chrome://extensions`.
+Turn on **Auto-add Amex offers when I sign in** in the popup. It is off by default; while it's off, nothing runs on its own.
 
-To **uninstall**: remove the card from `chrome://extensions`. Note that *removing* the extension deletes its stored offers; *disabling* it keeps them.
+- **What you'll see.** A grey **Offer Hub** tab group appears at the end of your tab strip for a few minutes and closes itself. Your Amex tab shows a small note while it works. Stay signed in until it finishes.
+- **The first run on a login only reads your cards.** Open **Dashboard → Cards**, drag that login's cards into the order you prefer (or use the arrows) and press **Confirm order**. Offers are added on your next sign-in at least 2 hours after the last run, or right away with **Run all cards in background**. If a login gains or loses a card, it goes back to reading only until you confirm its order again.
+- **Why the order matters.** Since August 2026, Amex keeps each offer on one card per login: add it to one card and it disappears from your others. So Offer Hub reads every card first, then gives each offer to one card. A bigger offer wins (say $50 back on one card against $25 on another). For identical offers, the card higher in your list wins. Cards are worked through top card first.
+- **Which accounts.** Credit and charge cards, including business cards. It skips checking, savings, loans, Business Blueprint and canceled accounts.
+- **Limits.** At most once every 2 hours per login. A run that stops early still counts: you press Stop or close its tab, you sign out or switch to another family member's login mid-run, or Amex stops confirming adds. Only a run whose offers page never loaded tries again sooner, on a visit 15 minutes later.
+- **Run it now.** On any Amex page, the popup's **Run all cards in background** starts it right away.
 
-### Safari (macOS)
+The popup's **Run Amex Autopilot** button still works as before: it adds every offer to the card on screen. Chase auto-add is planned.
 
-Safari can't load an unpacked extension folder directly the way Chromium does — Apple requires extensions to be wrapped in a small Xcode-built macOS app. The path is a one-time setup:
+## Use your offers with AI
 
-1. Install **Xcode** from the Mac App Store (free). Open it once so it finishes setup, then quit.
-2. Open **Terminal** and run, replacing the path with where you extracted the repo:
+Everything here is a button in the dashboard. Nothing needs a terminal.
 
-   ```bash
-   xcrun safari-web-extension-converter ~/Documents/Universal-Offer-Hub
-   ```
+**Ask AI** (top right) opens a chat about your offers; **X** closes it and clears it. The **Character** menu at the top of the chat picks the Ask AI character, from 12; your choice is saved and you can change it any time. For answers from ChatGPT, Claude or Gemini, click **Connect ChatGPT, Claude or Gemini** under the chat box, pick one, click **Get a key**, paste the key and press **Connect**. Each company charges per question, and Gemini has a free tier. Paid chat plans such as ChatGPT Plus or Claude Pro don't include a key. Without a key, the chat still finds offers by plain rules. Ask sends the AI only the offers that match, and every offer it mentions comes from your saved data.
 
-   Press Enter to accept the defaults when prompted. Xcode will open with a generated wrapper project.
-3. In Xcode, press **⌘ R** to build and run. A small wrapper app launches once — click **Quit and Open Safari Extensions Preferences**.
-4. In Safari, go to **Safari → Settings → Extensions** and tick **Universal Offer Hub**.
-5. If the extension isn't listed, enable the Develop menu first: **Safari → Settings → Advanced → "Show Develop menu in menu bar"**, then in the **Develop** menu turn on **"Allow Unsigned Extensions"** (Safari resets this on every restart, so you'll re-toggle it whenever you fully quit Safari).
+Follow-ups such as "only Chase", "3 days?", "sort by value" or "as CSV" narrow the last answer until **New chat**; a new topic ("best hotel offer") searches everything again. Replies list every match, with **Download CSV** and **Copy**. **Expand** gives the chat more room.
 
-To **update** later: replace the contents of the extracted folder with a new release, then re-open the Xcode project and press **⌘ R** again to rebuild the wrapper.
+**Open AI chat ↗** continues in ChatGPT, Claude or Gemini on their own sites, with your free or paid account there and no key. Pick one: Offer Hub downloads your active offers, copies a starter message and opens the chat. Add the downloaded file to the chat, paste, and ask. That company receives the file you give it.
 
-To **uninstall**: untick the extension in Safari → Settings → Extensions, and delete the wrapper app from `/Applications` if you no longer want it.
+**Claude Desktop app**, in the same menu, lets the Claude app on your computer look up your offers while you chat. Set it up once:
 
----
+1. **Choose a folder** for a live copy of your offers: a new folder such as `Offer Hub` in your home folder, not one synced to iCloud, OneDrive or Google Drive. Chrome won't use the home, Documents, Desktop or Downloads folders themselves, only folders inside them.
+2. **Download plugin** saves `Offer Hub.mcpb`.
+3. Open that file. Claude Desktop shows an install screen and asks for a folder: pick the same one.
 
-## 🧭 Usage
+Claude Desktop includes everything the plugin needs. Then ask Claude, for example, "Using Offer Hub, what's my best hotel offer, and which card is it on?" If Chrome later asks about the folder, click **Keep updating** and choose **Allow on every visit**, so the copy stays current while the dashboard is closed. The footer shows the live copy's status.
 
-1. Open Chase / Amex / Capital One / Walgreens. Log in if needed.
-2. Click the Universal Offer Hub icon in your toolbar.
-3. The popup auto-detects the site and shows a coloured **Run … Autopilot** button. Click it.
-4. The on-page autopilot UI takes over — same dashboards you'd recognise from the standalone bookmarklets (Scanned / Queue / Added). It runs to completion.
-5. Every offer it touches is mirrored into the hub. Click the toolbar icon any time to search across every card.
+**Copy** (beside the offer count) copies the offers the table shows, with your view, filters and search applied, as plain text, up to 500.
 
-The popup also acts as a search hub even when you're not on a supported site. Filter by source / type, search by name, sort by Best match / Expiring soonest / Value / A→Z / Recently saved.
+<details><summary>For developers</summary>
 
----
+The plugin is `mcp/offer-hub-mcp.js`, a read-only MCP server over the live copy's `offers.json` (Node 18 or later, no dependencies). The dashboard packs it with `lib/offers.js` and `lib/categories.js` into an MCP Bundle (`lib/mcpb.js`). Its tools are `search_offers`, `list_cards` and `offers_overview`. Other MCP apps run it directly:
 
-## 🔍 Search & sort
+- Claude Code: `claude mcp add offer-hub -- node /path/to/Universal-Offer-Hub/mcp/offer-hub-mcp.js --dir "/path/to/Offer Hub"`
+- Gemini CLI (`~/.gemini/settings.json`) and Cursor (`~/.cursor/mcp.json`): an `mcpServers` entry, `"offer-hub": {"command": "node", "args": ["/path/to/Universal-Offer-Hub/mcp/offer-hub-mcp.js", "--dir", "/path/to/Offer Hub"]}`
 
-Search is intentionally forgiving:
+ChatGPT connects only to plugins hosted on the internet, so it can't use this one.
+</details>
 
-- `samsung 10%` — AND across tokens. Both must match.
-- `road runner` / `RoadRunner` / `Road-Runner` / `roadrunner` — all match the same merchant. Spaces, dashes, casing, punctuation are ignored.
-- Scoring tier: exact merchant match (6) → merchant prefix (5) → merchant substring (4) → compact-merchant match (3) → value substring (2) → haystack (1).
-- Best-match tie-breaker: numeric reward value (high → low), then merchant name.
+## Request a new site
 
-Sort options:
+[Open an issue](../../issues/new) with the offers page URL and a copy of the page:
 
-| Option | Behaviour |
+1. Open the offers page (signed in) and scroll until all offers have loaded.
+2. Save it with **Cmd+S** (Mac) or **Ctrl+S** (Windows), choosing **Webpage, HTML Only**.
+3. Search the file for your name, card numbers and email and replace them with `XXXX`.
+4. Zip the `.html` file and attach the zip to the issue. GitHub limits issue text to 65,536 characters, so pasting the page into the issue box doesn't work.
+
+## Add a source yourself
+
+1. Add a record to `UOH_SOURCES` in `lib/sources.js` (id, name, colors, host patterns, landing URL).
+2. Add a `host.indexOf("site.com") > -1` branch in `content/scraper.js` that calls `saveOffer(key, merchant, value, "Site", { card, cardId, expiresTs, status })` for each offer.
+3. Add the site's host permission in `manifest.json`.
+
+Pull requests are welcome at [github.com/pateljay134/Universal-Offer-Hub](https://github.com/pateljay134/Universal-Offer-Hub/).
+
+## Folder layout
+
+```
+manifest.json
+background.js          service worker: offer reminders, the one writer of saved data, Amex auto-add host
+lib/sources.js         supported sites (popup detection, colors)
+lib/offers.js          shared helpers: search, parsing, expiry, card labels, exports
+lib/categories.js      merchant categories (brand list + word rules)
+lib/autorun.js         Amex auto-add: scan cards, assign offers, add, harvest
+lib/livefile.js        the live copy: offers.json / offers.csv in the folder you pick
+lib/ai.js              Ask AI: ChatGPT, Claude or Gemini (dashboard)
+lib/mcpb.js            builds the Claude Desktop plugin file, Offer Hub.mcpb (dashboard)
+lib/theme.css          shared look
+content/scraper.js     the per-site autopilots (page context)
+content/bridge.js      passes autopilot saves to the service worker
+content/amex-auto.js   drives the background Amex tab; notes in your Amex tab
+popup/                 toolbar popup
+dashboard/             full-page dashboard
+bookmarklets/          the original bookmarklet scripts
+mcp/offer-hub-mcp.js   the plugin: lets AI apps on this computer search offers.json (Node 18+, no dependencies)
+tests/                 node --test tests/*.test.js (no dependencies)
+```
+
+## Saved data
+
+Everything is in `chrome.storage.local`:
+
+| Key | What it holds |
 | --- | --- |
-| **Best match** | Highest combined token score, then highest value. |
-| **Expiring soonest** | Nearest expiry first. Offers without a parsed expiry sink to the bottom. |
-| **Value (high → low)** | By numeric reward (`n`). |
-| **A → Z** | Alphabetical by merchant. |
-| **Recently saved** | Newest writes first. |
+| `UOH_Database` | Every offer, keyed `<source>_<card>_<merchant>`: merchant, offer text, source, card, expiry, status, first and last seen |
+| `UOH_Settings` | Toggles, card nicknames, card order and the Ask AI character |
+| `UOH_AutoState` | Amex auto-add history (last run, per-card times) |
+| `UOH_Categories` | Categories saved for merchants the built-in lists don't cover |
+| `UOH_LiveFile` | Live copy status |
+| `UOH_AIConfig` | Ask AI: the AI in use, your keys and chosen models (never exported) |
+| `UOH_LastRunCount`, `UOH_LastRunAt`, `UOH_UIState` | Last autopilot run and popup filters |
 
----
+**Clear all** in the popup deletes every saved offer, the last auto-add summary and the categories, and empties the live copy. Settings, nicknames, card order, the 2-hour auto-add timers and your Ask AI keys stay.
 
-## 🏗 Folder layout
+## Feedback
 
-```
-Universal-Offer-Hub/
-├── manifest.json
-├── lib/
-│   └── sources.js          shared source registry (the only file you edit to add a new site)
-├── popup/
-│   ├── popup.html
-│   ├── popup.css
-│   └── popup.js            auto-detect, search engine, filters, CSV export
-├── content/
-│   ├── bridge.js           ISOLATED-world bridge: persists postMessage offers → chrome.storage
-│   └── scraper.js          MAIN-world per-site autopilots (Chase / Amex / Capital One / Walgreens)
-├── bookmarklets/
-│   ├── chase-original.txt  original Chase script (verbatim)
-│   ├── chase-enhanced.txt  Chase script + Added Offers harvest
-│   ├── amex.txt            original Amex script (verbatim)
-│   └── walgreens.txt       original Walgreens script (verbatim)
-└── README.md
-```
+Bugs and requests: [open an issue](../../issues), or message [u/pateljay134](https://www.reddit.com/user/pateljay134/) on Reddit. Free, no subscriptions.
 
-Capital One has no file in `bookmarklets/` — it is the single longest script and is preserved verbatim inside `content/scraper.js` under the `host.indexOf("capitalone.com")` branch.
+## License
 
----
-
-## 🛠 Requesting or contributing a new source
-
-A "source" is a website whose offers the extension can scrape. Each source needs its own autopilot — the DOM is different on every site, so a generic scraper doesn't work. There are two ways to get a new source added:
-
-### Option A — You want a new site supported (no coding required)
-
-[Open an issue](../../issues/new) and include:
-
-1. **Which site / which page.** The exact URL of the offers page (after you've logged in), e.g. `https://www.target.com/circle/offers`.
-2. **The full HTML of that page.** This is the only way I can write the scraping selectors. To grab it:
-   - Open the offers page in Chrome.
-   - Press **F12** (or **Cmd+Option+I** on Mac) to open DevTools.
-   - Click the **Elements** tab.
-   - Right-click the very top `<html>` line → **Copy → Copy outerHTML**.
-   - Paste it into a `.html` file and attach it to the issue (or paste into a [GitHub gist](https://gist.github.com) and link it — easier for large pages).
-
-   **Please scrub anything sensitive before sharing** — search the HTML for your full name, full card numbers, customer ID, email, address, etc., and replace with `XXXX`. The selectors I need only depend on the offer-tile markup, not your personal data.
-
-3. **(Optional but very helpful)** A second HTML dump of the site's "Already added / Clipped" page if it has one, so the autopilot can also harvest your existing offer history.
-
-I'll review the HTML, write the autopilot, and ship it in the next release.
-
-### Option B — You already have a working script
-
-If you've written an autopilot for the site yourself (or have one as a bookmarklet), please open a Pull Request with all three of:
-
-1. A new record in `window.UOH_SOURCES` in `lib/sources.js`:
-
-   ```js
-   {
-     id: "Target",
-     name: "Target Circle Offers",
-     shortName: "Target",
-     color: "#cc0000",
-     hostPatterns: ["target.com"],
-     landingUrl: "https://www.target.com/circle",
-     blurb: "Adds every available Target Circle offer."
-   }
-   ```
-
-2. A matching host-permission entry in `manifest.json`:
-
-   ```jsonc
-   "host_permissions": [
-     ...,
-     "*://*.target.com/*"
-   ]
-   ```
-
-3. A new `host.indexOf("target.com") > -1` branch inside `content/scraper.js` containing the autopilot logic. Each offer your script visits should call:
-
-   ```js
-   saveOffer(
-     "target_" + cardId + "_" + merchant.replace(/\W/g, ""),
-     merchant, value, "Target",
-     { status: "added", card: cardLabel, cardId: cardId, expiresTs: parseExpiresTs(expiry) }
-   );
-   ```
-
-   so the hub keys it consistently with the other sources. The popup's auto-detect, chip filter, and search will pick the new source up on the next reload.
-
-If you have a working script for a new site, **please open a Pull Request for review against [github.com/pateljay134/Universal-Offer-Hub](https://github.com/pateljay134/Universal-Offer-Hub/)** — once it's reviewed and merged, everyone using the extension gets that source for free, and we can keep expanding the hub together.
-
-Either path is welcome — Option A is the most common, Option B is appreciated when you've already done the hard part.
-
----
-
-## 💾 Storage model
-
-Everything lives in `chrome.storage.local`:
-
-| Key | Shape | Meaning |
-| --- | --- | --- |
-| `UOH_Database` | `{ [key]: OfferRecord }` | All offers, keyed by `<source>_<cardId>_<sanitised-merchant>` |
-| `UOH_LastRunCount` | `number` | How many offers the most recent autopilot run added or clipped |
-| `UOH_LastRunAt` | `number` (ms) | Timestamp of the most recent autopilot run |
-| `UOH_UIState` | `{ source, type, sort, query }` | Last-used popup filter state, restored on reopen |
-
-`OfferRecord` fields:
-
-| Field | Type | Notes |
-| --- | --- | --- |
-| `m` | string | Merchant display name |
-| `v` | string | Raw offer value text (e.g. `"10% cash back"`, `"Spend $30, earn 1,500 miles"`) |
-| `site` | string | Source id (`"Chase"` / `"Amex"` / `"Capital One"` / `"Walgreens"`) |
-| `n` | number | Parsed numeric reward |
-| `t` | string | `PERCENT` / `DOLLAR` / `MILES` / `MULTI` / `OTHER` (based on **reward**, not spend) |
-| `r` | string | Lowercased search haystack (merchant + value + card label) |
-| `ts` | number | Last-update timestamp |
-| `firstSeen` | number | First-saved timestamp |
-| `card` | string | Human-readable card label (e.g. `"Blue Cash Everyday® ••91009"`) |
-| `cardId` | string | Stable per-card discriminator used in the storage key |
-| `expiresTs` | number? | Parsed expiry timestamp (ms). Used for "Expiring soonest" sort. |
-| `days` | string? | Raw expiry text from the page (fallback display) |
-| `status` | string? | `available` / `added` / `clipped` (source-dependent) |
-| `channel` | string? | `Online` / `In-Store` / `Both` (Capital One only) |
-| `badge` | string? | `NEW` / `EXCLUSIVE` / `BONUS` (Capital One only) |
-
-Each autopilot run **upserts** by key, so running the same autopilot twice refreshes existing entries instead of duplicating them. Running on a *different card* under the same issuer creates a separate entry — your Platinum and Blue Cash offers coexist.
-
----
-
-## 🚧 Roadmap
-
-Open ideas — feedback welcome via the Reddit handle below:
-
-- Cross-card duplicate hinting ("this 10% Best Buy offer is also on your other Amex")
-- Expiry reminders / badges for "expiring this week"
-- Composite "best value first" sort
-- Optional `chrome.storage.sync` mode for cross-device sync (with the per-item size trade-off it implies)
-
----
-
-## 💬 Feedback / issues
-
-- Bugs / feature requests → [open an issue](../../issues) on this repo.
-- Reddit DM or mention → [u/pateljay134](https://www.reddit.com/user/pateljay134/).
-
-All free, no subscriptions, no paywalls, no upsell. If it saves you money, consider buying a friend or family member a coffee ☕
-
----
-
-## 📜 License
-
-See [`LICENSE`](./LICENSE) in the repo.
+See [`LICENSE`](./LICENSE).
