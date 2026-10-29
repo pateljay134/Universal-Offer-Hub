@@ -51,12 +51,14 @@ Search ignores spaces, dashes and case (`road runner`, `RoadRunner` and `Road-Ru
 
 Turn on **Auto-add Amex offers when I sign in** in the popup. It is off by default; while it's off, nothing runs on its own.
 
-- **What you'll see.** A grey **Offer Hub** tab group appears at the end of your tab strip for a few minutes and closes itself. Your Amex tab shows a small note while it works. Stay signed in until it finishes.
-- **The first run on a login only reads your cards.** Open **Dashboard → Cards**, drag that login's cards into the order you prefer (or use the arrows) and press **Confirm order**. Offers are added on your next sign-in at least 2 hours after the last run, or right away with **Run all cards in background**. If a login gains or loses a card, it goes back to reading only until you confirm its order again.
-- **Why the order matters.** Since August 2026, Amex keeps each offer on one card per login: add it to one card and it disappears from your others. So Offer Hub reads every card first, then gives each offer to one card. A bigger offer wins (say $50 back on one card against $25 on another). For identical offers, the card higher in your list wins. Cards are worked through top card first.
+- **What it does.** When you open Amex while signed in, Offer Hub opens the offers page in a new window and clicks **+** on every offer, card by card, top card first, the same way **Run Amex Autopilot** does. The window closes itself when it's done. Leave it open until then and stay signed in.
+- **The first time on a login, you choose.** Offer Hub reads that login's cards, then opens **Cards** on its own. Leave **Add** on for the cards that should get offers, drag them into order (or use the arrows) and press **Confirm and add offers**. Adding starts right away.
+- **After that, it just adds.** Later sign-ins add offers with no questions. It asks again only when a new card shows up on the login.
+- **Why the order matters.** Since August 2026, Amex keeps each offer on one card per login: add it to one card and it disappears from your others. So the top card gets every offer it has, the next card gets what's left, and so on.
+- **A card you replaced or closed.** Remove it in **Cards** with **×**. Its saved offers go with it; nothing changes at Amex.
 - **Which accounts.** Credit and charge cards, including business cards. It skips checking, savings, loans, Business Blueprint and canceled accounts.
-- **Limits.** At most once every 2 hours per login. A run that stops early still counts: you press Stop or close its tab, you sign out or switch to another family member's login mid-run, or Amex stops confirming adds. Only a run whose offers page never loaded tries again sooner, on a visit 15 minutes later.
-- **Run it now.** On any Amex page, the popup's **Run all cards in background** starts it right away.
+- **Limits.** At most once every 2 hours per login. A run that stops early still counts: you press Stop or close its window, you sign out or switch to another family member's login mid-run, or Amex stops confirming adds. Only a run whose offers page never loaded tries again sooner, on a visit 15 minutes later.
+- **Run it now.** **Add offers now** in **Cards**, or **Add offers on all cards** in the popup on an Amex page.
 
 The popup's **Run Amex Autopilot** button still works as before: it adds every offer to the card on screen. Chase auto-add is planned.
 
