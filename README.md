@@ -11,7 +11,7 @@ A Chrome extension that adds every available card offer (Chase, American Express
 ## What it does
 
 - **One-click autopilots** for Chase, Amex, Capital One, Walgreens and Safeway. Open the site, click the toolbar icon, press **Run**. Every offer it touches is saved to the hub, per card.
-- **Amex auto-add (opt-in).** When you open Amex while signed in, it reads every credit card on that login in a background tab and adds each offer to the right card. Details below.
+- **Amex and Chase auto-add (opt-in).** When you open Amex or Chase while signed in, it adds every offer to the cards you picked, in a background tab. Details below.
 - **Dashboard.** A full-page table of every active offer. Click a column title to sort; the ▾ beside it filters by card (an issuer's cards all at once, or one at a time), offer type, category or expiry. Views for New this week and Expiring soon, and card nicknames ("Mom Plat").
 - **Ask AI.** A chat about your offers, answered by ChatGPT, Claude or Gemini with your own key (or by plain rules without one). Follow-ups such as "only Chase" or "as CSV" build on the last answer, and every reply lists all its matches.
 - **Use your offers in AI apps.** One click hands them to ChatGPT, Claude or Gemini in the browser, and a one-time setup lets the Claude Desktop app read them live. **Copy** takes any list you narrow down.
@@ -24,7 +24,7 @@ A Chrome extension that adds every available card offer (Chase, American Express
 - No server, no account, no analytics. Your offers live in Chrome (`chrome.storage.local`) and, if you turn on the live copy, in the folder you pick.
 - Ask AI: each question sends the AI you connected (OpenAI, Anthropic or Google) your question and the offers that match it: store, offer, card name and ending, expiry and category. Your key stays in this browser and goes only to its own company. With no AI connected, nothing leaves the browser.
 - Open AI chat and the Claude Desktop app work only when you use them. You give the chat site the file yourself, and Claude Desktop reads the live copy on your computer and sends what it looks up to Anthropic as part of your chat. Anything you copy into another app goes wherever that app sends it.
-- Amex auto-add opens Amex's own website in a background tab: the same pages you'd open yourself, with your existing sign-in.
+- Auto-add opens the bank's own website (Amex or Chase) in a background tab: the same pages you'd open yourself, with your existing sign-in.
 - Plain, unminified JavaScript. You install it unpacked from a folder you control, so it can't update itself behind your back.
 - The `<all_urls>` permission exists for offer reminders. The service worker reads only the hostname of the page you're on and compares it with your saved offers. Turn reminders off in the popup and it stops.
 
@@ -47,20 +47,32 @@ The popup and the dashboard count offers the same way: an offer saved on two car
 
 Search ignores spaces, dashes and case (`road runner`, `RoadRunner` and `Road-Runner` all match) and also matches card nicknames and categories.
 
-## Amex auto-add
+## Auto-add on sign-in
 
-Turn on **Auto-add Amex offers when I sign in** in the popup. It is off by default; while it's off, nothing runs on its own.
+Amex and Chase each have a toggle in the popup: **Auto-add Amex offers when I sign in** and **Auto-add Chase offers when I sign in**. Both are off by default; while one is off, nothing runs on its own for that bank. The **Cards** link on each toggle's line opens **Cards** in the dashboard at that bank's cards.
 
-- **What it does.** When you open Amex while signed in, Offer Hub opens the offers page in a background tab (a small grey **Offer Hub** tab group at the end of your tabs) and clicks **+** on every offer, card by card, top card first, the same way **Run Amex Autopilot** does. The tab closes itself when it's done. Stay signed in until then.
-- **The first time on a login, you choose.** Offer Hub reads that login's cards, then opens **Cards** on its own. Leave **Add** on for the cards that should get offers, drag them into order (or use the arrows) and press **Confirm and add offers**. Adding starts right away.
-- **After that, it just adds.** Later sign-ins add offers with no questions. It asks again only when a new card shows up on the login.
-- **Why the order matters.** Since August 2026, Amex keeps each offer on one card per login: add it to one card and it disappears from your others. So the top card gets every offer it has, the next card gets what's left, and so on.
-- **A card you replaced or closed.** Remove it in **Cards** with **×**. Its saved offers go with it; nothing changes at Amex.
+- **What it does.** When you open that bank's site while signed in, Offer Hub opens its offers page in a background tab (a small grey **Offer Hub** tab group at the end of your tabs) and runs that bank's **Run … Autopilot** on each card, top card first. It is the popup button's own code: it clicks **+** on every offer, then reads the card's Added list. The tab closes itself when it's done. Stay signed in until then.
+- **The first time on a login, you choose.** Offer Hub reads only that login's list of cards, then opens **Cards** on its own. Leave **Add** on for the cards that should get offers and press **Confirm and add offers**. Adding starts right away.
+- **After that, it just adds.** Later sign-ins add offers with no questions. It asks again only when a new card shows up on the login. Cards with **Add** off are skipped.
+- **A card you replaced or closed.** Remove it in **Cards** with **×**. Its saved offers go with it; nothing changes at the bank.
+- **Limits.** At most once every 2 hours per login. A run that stops early still counts: you press Stop or close its tab, you sign out or switch to another family member's login mid-run, or the autopilot can't run on two cards in a row. Only a run whose offers page never loaded tries again sooner, on a visit 15 minutes later. Open the bank inside that wait and a small note on its page says when Offer Hub last ran for the login and when the next run can start.
+- **One bank at a time.** Sign in to Chase while an Amex run is working and the Chase run starts when the Amex one ends.
+- **Run it now.** **Add offers now** in **Cards** or in that note, or **Add offers on all cards** in the popup on that bank's page.
+
+The popup's **Run Amex Autopilot** and **Run Chase Autopilot** buttons work as before: they add every offer to the card on screen. Auto-add runs the same code. Chrome slows the timers of a tab you can't see, so in the background tab Offer Hub gives the autopilot each step itself, at the pace its own timer keeps (every 0.25 seconds for Amex, 0.4 for Chase).
+
+### Amex
+
+- **Why the order matters.** Since August 2026, Amex keeps each offer on one card per login: add it to one card and it disappears from your others. So the top card gets every offer it has, the next card gets what's left, and so on. Set the order in **Cards** by dragging (or with the arrows).
 - **Which accounts.** Credit and charge cards, including business cards. It skips checking, savings, loans, Business Blueprint and canceled accounts.
-- **Limits.** At most once every 2 hours per login. A run that stops early still counts: you press Stop or close its tab, you sign out or switch to another family member's login mid-run, or Amex stops confirming adds. Only a run whose offers page never loaded tries again sooner, on a visit 15 minutes later.
-- **Run it now.** **Add offers now** in **Cards**, or **Add offers on all cards** in the popup on an Amex page.
 
-The popup's **Run Amex Autopilot** button still works as before: it adds every offer to the card on screen. Chase auto-add is planned.
+### Chase
+
+- **Every card gets every offer.** Chase keeps a separate copy of an offer on each card: adding it to one card doesn't take it off another, and each card earns it on its own purchases. The order in **Cards** only sets which card is listed first; **Add** decides which cards get offers.
+- **Which accounts.** Everything in the **Choose account** list on Chase Offers, debit cards included. Turn **Add** off for any you don't want offers on.
+- **Opening each card.** Run Chase Autopilot saves offers under the account id in the page address, so Offer Hub opens Chase Offers with the card's id there. If Chase shows another card, or puts the open card's id back into the address, Offer Hub picks the right card in **Choose account** and sets the address again. If the address still doesn't name the card, it skips that card rather than save its offers under the wrong one.
+- **How it adds.** Run Chase Autopilot clicks **+** on one offer per step; Chase opens that offer's page and the autopilot goes back to the list. In the background tab Chase can be slow, so Offer Hub adds two waits around the autopilot's steps: it lets it press Back once per offer page (a second press only after 5 seconds), and when the list shows no offer left to add, it looks twice more, a second apart, before the autopilot moves on to the Added list.
+- **When Chase Offers has trouble.** If "It looks like we're having trouble with Chase Offers" shows before a card's run, it waits 5 seconds and presses **Try again**, twice at most, then reloads the page once. If the message stays, it moves on to the next card.
 
 ## Use your offers with AI
 
@@ -113,23 +125,28 @@ Pull requests are welcome at [github.com/pateljay134/Universal-Offer-Hub](https:
 
 ```
 manifest.json
-background.js          service worker: offer reminders, the one writer of saved data, Amex auto-add host
+background.js          service worker: offer reminders, the one writer of saved data, auto-add host
 lib/sources.js         supported sites (popup detection, colors)
 lib/offers.js          shared helpers: search, parsing, expiry, card labels, exports
 lib/categories.js      merchant categories (brand list + word rules)
-lib/autorun.js         Amex auto-add: scan cards, assign offers, add, harvest
+lib/autorun.js         auto-add: the background tab, its jobs, card order and timers; one bank at a time
+lib/issuers/amex.js    what Amex auto-add needs: its pages, how cards are read, its autopilot's pace
+lib/issuers/chase.js   the same for Chase, plus the readers for its account and offer labels
 lib/livefile.js        the live copy: offers.json / offers.csv in the folder you pick
 lib/ai.js              Ask AI: ChatGPT, Claude or Gemini (dashboard)
 lib/mcpb.js            builds the Claude Desktop plugin file, Offer Hub.mcpb (dashboard)
 lib/theme.css          shared look
-content/scraper.js     the per-site autopilots (page context)
+content/scraper.js     the per-site autopilots (page context); auto-add runs the Amex and Chase ones too
 content/bridge.js      passes autopilot saves to the service worker
-content/amex-auto.js   drives the background Amex tab; notes in your Amex tab
+content/auto-core.js   auto-add in the page, for every bank: the background tab's link to the service worker, running the bank's autopilot step by step, notes in your tab
+content/amex-auto.js   Amex steps: read and switch cards, then Run Amex Autopilot
+content/chase-auto.js  Chase steps: the accounts page, Choose account, then Run Chase Autopilot with its two waits
 popup/                 toolbar popup
 dashboard/             full-page dashboard
 bookmarklets/          the original bookmarklet scripts
 mcp/offer-hub-mcp.js   the plugin: lets AI apps on this computer search offers.json (Node 18+, no dependencies)
 tests/                 node --test tests/*.test.js (no dependencies)
+tests/browser/         node tests/browser/chase-auto.check.js (and amex-auto.check.js): auto-add with the real autopilots on made-up pages in headless Chrome
 ```
 
 ## Saved data
@@ -140,7 +157,7 @@ Everything is in `chrome.storage.local`:
 | --- | --- |
 | `UOH_Database` | Every offer, keyed `<source>_<card>_<merchant>`: merchant, offer text, source, card, expiry, status, first and last seen |
 | `UOH_Settings` | Toggles, card nicknames, card order and the Ask AI character |
-| `UOH_AutoState` | Amex auto-add history (last run, per-card times) |
+| `UOH_AutoState` | Auto-add history (last run, per-card times) |
 | `UOH_Categories` | Categories saved for merchants the built-in lists don't cover |
 | `UOH_LiveFile` | Live copy status |
 | `UOH_AIConfig` | Ask AI: the AI in use, your keys and chosen models (never exported) |
