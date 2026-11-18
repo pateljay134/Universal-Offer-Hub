@@ -63,8 +63,10 @@ The popup's **Run Amex Autopilot**, **Run Chase Autopilot** and **Run CapitalOne
 
 ### Amex
 
+- **Where it starts.** On any Amex page that shows your cards: the card in the account switcher, or the accounts listed on **Overview**, where Amex lands after you sign in. Moving between Amex pages counts too.
 - **Why the order matters.** Since August 2026, Amex keeps each offer on one card per login: add it to one card and it disappears from your others. So the top card gets every offer it has, the next card gets what's left, and so on. Set the order in **Cards** by dragging (or with the arrows).
 - **Which accounts.** Credit and charge cards, including business cards. It skips checking, savings, loans, Business Blueprint and canceled accounts.
+- **When Amex changes its pages.** Offers are read from the page's layout and text, not from Amex's style names, which it renames now and then. Each card's **Added to Card (N)** count is checked against what was read. If some offers can't be read, the run says how many it got (for example, "Read 0 of the 120 offers on this card's Added page") in the popup's last-run line instead of finishing as if all went well.
 
 ### Chase
 
@@ -72,6 +74,7 @@ The popup's **Run Amex Autopilot**, **Run Chase Autopilot** and **Run CapitalOne
 - **Which accounts.** Everything in the **Choose account** list on Chase Offers, debit cards included. Turn **Add** off for any you don't want offers on.
 - **Opening each card.** Run Chase Autopilot saves offers under the account id in the page address, so Offer Hub opens Chase Offers with the card's id there. If Chase shows another card, or puts the open card's id back into the address, Offer Hub picks the right card in **Choose account** and sets the address again. If the address still doesn't name the card, it skips that card rather than save its offers under the wrong one.
 - **How it adds.** Run Chase Autopilot clicks **+** on one offer per step; Chase opens that offer's page and the autopilot goes back to the list. In the background tab Chase can be slow, so Offer Hub adds two waits around the autopilot's steps: it lets it press Back once per offer page (a second press only after 5 seconds), and when the list shows no offer left to add, it looks twice more, a second apart, before the autopilot moves on to the Added list.
+- **Carousels.** Chase also shows offers in carousels such as "Grateful for great deals", a few at a time with arrows. The autopilot presses each one that isn't added yet, then presses the carousel's right arrow and waits for the next set, until it has seen every offer the carousel counts ("1 of 12" to "12 of 12"). This works whether a press adds the offer where it is or opens the offer's page.
 - **When Chase Offers has trouble.** If "It looks like we're having trouble with Chase Offers" shows before a card's run, it waits 5 seconds and presses **Try again**, twice at most, then reloads the page once. If the message stays, it moves on to the next card.
 
 ### Capital One
