@@ -77,7 +77,7 @@ The popup's **Run Amex Autopilot**, **Run Chase Autopilot** and **Run CapitalOne
 ### Capital One
 
 - **Loads, doesn't add.** Run CapitalOne Autopilot loads every offer on a card ("View More Offers" until there are no more) and saves it to the hub. It doesn't activate any offer, so the card-linked offers in Capital One's **Added to Card** box stay as they are. Auto-load runs the same code on each card, and the run's summary says how many offers it saved.
-- **Where it runs.** Signing in at myaccounts.capitalone.com starts it; the run itself opens Capital One Offers (capitaloneoffers.com) with your existing sign-in. Opening Capital One Offers yourself doesn't start a run.
+- **Where it runs.** Signing in at myaccounts.capitalone.com starts it. The run opens your Capital One home page in the background tab and presses **View all offers** in its shopping box, which opens Capital One Offers (capitaloneoffers.com/feed?viewInstanceId=…) with your existing sign-in. Opened directly, without that address, Capital One Offers shows its sign-in page or an empty page. If pressing the button leaves the tab where it was, the run opens the address the box's offers name. Opening Capital One Offers yourself doesn't start a run.
 - **Which cards.** Everything in the card menu at the top of Capital One Offers ("Apply my offer to:"), Discover cards included. Each card has its own offers, so the order in **Cards** only sets which card is listed first.
 - **Opening each card.** Offer Hub picks the card in that menu, waits until the page names it and shows its offers, then starts the autopilot. Capital One ignores a pick made with events a script sends, so Offer Hub plays the click through the page's own React handlers, as Run CapitalOne Autopilot does for "View More Offers". The autopilot saves offers under the card the page names when it starts, so if the page never names the card, Offer Hub skips it rather than save its offers under another card, and the run's notes say what was tried. Two cards ending in the same 4 digits share one place in the hub, so they're run once.
 
@@ -149,8 +149,8 @@ content/bridge.js      passes autopilot saves to the service worker
 content/auto-core.js   auto-add in the page, for every bank: the background tab's link to the service worker, running the bank's autopilot step by step, notes in your tab
 content/amex-auto.js   Amex steps: read and switch cards, then Run Amex Autopilot
 content/chase-auto.js  Chase steps: the accounts page, Choose account, then Run Chase Autopilot with its two waits
-content/capitalone-auto.js  Capital One steps: the card menu, then Run CapitalOne Autopilot on each card
-content/capitalone-main.js  Capital One's card menu takes a pick only through React's own handlers; this plays one from the page
+content/capitalone-auto.js  Capital One steps: View all offers on the home page, the card menu, then Run CapitalOne Autopilot on each card
+content/capitalone-main.js  from the page: View all offers opens in the run's tab; Capital One's card menu takes a pick only through React's own handlers, this plays one
 popup/                 toolbar popup
 dashboard/             full-page dashboard
 bookmarklets/          the original bookmarklet scripts
