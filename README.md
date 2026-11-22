@@ -1,6 +1,6 @@
 # Universal Offer Hub
 
-A Chrome extension that adds every available card offer (Chase, American Express, Capital One) and clips every store coupon (Walgreens, Safeway) for you, then keeps all of them in one searchable hub on your own computer. Nothing is stored or sent anywhere else, except to an AI you connect, for your own questions.
+A Chrome extension that adds every available card offer (Chase, American Express, Capital One), clips every store coupon (Walgreens, Safeway) and saves every store reward on Capital One Shopping for you, then keeps all of them in one searchable hub on your own computer. Nothing is stored or sent anywhere else, except to an AI you connect, for your own questions.
 
 ![License](https://img.shields.io/github/license/pateljay134/Universal-Offer-Hub.svg)
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange.svg)
@@ -10,7 +10,7 @@ A Chrome extension that adds every available card offer (Chase, American Express
 
 ## What it does
 
-- **One-click autopilots** for Chase, Amex, Capital One, Walgreens and Safeway. Open the site, click the toolbar icon, press **Run**. Every offer it touches is saved to the hub, per card.
+- **One-click autopilots** for Chase, Amex, Capital One, Capital One Shopping, Walgreens and Safeway. Open the site, click the toolbar icon, press **Run**. Every offer it touches is saved to the hub, per card.
 - **Auto-add on sign-in (opt-in).** When you open Amex or Chase while signed in, it adds every offer to the cards you picked, in a background tab. For Capital One it loads and saves every offer on each card. Details below.
 - **Dashboard.** A full-page table of every active offer. Click a column title to sort; the ▾ beside it filters by card (an issuer's cards all at once, or one at a time), offer type, category or expiry. Views for New this week and Expiring soon, and card nicknames ("Mom Plat").
 - **Ask AI.** A chat about your offers, answered by ChatGPT, Claude or Gemini with your own key (or by plain rules without one). Follow-ups such as "only Chase" or "as CSV" build on the last answer, and every reply lists all its matches.
@@ -39,13 +39,31 @@ To update, replace the folder's contents with a newer release and click the relo
 
 ## Use
 
-1. Open Chase, Amex, Capital One, Walgreens or Safeway and sign in.
+1. Open Chase, Amex, Capital One, Capital One Shopping, Walgreens or Safeway and sign in.
 2. Click the toolbar icon. It detects the site and shows **Run … Autopilot**. Click it; the on-page panel shows progress.
 3. Search everything from the popup, or click **Dashboard** for the full view.
 
 The popup and the dashboard count offers the same way: an offer saved on two cards counts once, and expired offers are left out (the popup says how many) until **Clean expired** removes them. An offer that ends today counts until midnight.
 
 Search ignores spaces, dashes and case (`road runner`, `RoadRunner` and `Road-Runner` all match) and also matches card nicknames and categories.
+
+## Capital One Shopping
+
+Capital One Shopping (capitaloneshopping.com) is Capital One's shopping rewards site, separate from the card offers at Capital One Offers. Its rewards belong to your Capital One Shopping account rather than a card, so the hub saves them without one, like Walgreens and Safeway coupons.
+
+Open the home page signed in and click the toolbar icon. Beside **Run CapitalOne Shopping Autopilot**, choose how long it reads (5 minutes until you change it; the hub keeps your choice), then press Run. Its panel opens in Chrome's side panel, beside the page: the same status and counts as the other autopilots' panels, the time left and **Stop and save**. The toolbar icon shows how many stores it has read. Nothing of the hub goes on the page itself, because Capital One Shopping stops adding offers when something else is on its page: in tests on a signed-in home page, runs with the panel on the page ended after 88 to 598 offers, and without it a run read to the page's own end at 1,020.
+
+The page keeps adding offers as you scroll, so the autopilot reads it as you would: a quick swipe to where the offers end, a wait while the page loads its next batch of 25, and on. It doesn't go down to the store list and footer under the offers, because the page loads the next batch only while its last offers are on screen. If nothing new comes for 5 seconds, it looks around: down to the bottom of the page, then back up past the last 11 offers, at most twice. It stops when the page has no more offers to add, when its time is up (and says if the page was still adding offers, so you know to choose more minutes next time), or when you press **Stop and save**, and saves what it read. Keep the tab in front, because Chrome pauses pages in background tabs and nothing loads there. It doesn't press anything: you earn a reward by shopping through Capital One Shopping. Nothing runs on its own for this site.
+
+- **Every rate.** A store can show several rates (2% in Rewards Offers, 4% in Exclusive Offers); each is an entry of its own, with the offer's own words ("Save at Walmart", an event's name) and its box's label ("Exclusive Offer") in the CSV's Badge column. The same rate in two boxes is one entry. Price Drop products aren't saved, but their rate counts for the store.
+- **Event rates.** A rate shown only with an end date, such as "Exclusive rates for next 1 day", expires when the event ends, counted to the end of that day.
+- **Open.** Each offer has an **Open** link in the popup and the dashboard. It opens the offer's own link from the page with what the page adds to it when you click the offer there, so the reward is activated the same way. Once that link has run out, or for an offer without one, it opens the store's page on Capital One Shopping instead. Each run saves fresh links.
+- **Caps.** Every offer ends in "($1,000 max)", so the hub drops that. Other caps stay: "Up to 7.5% back ($500 max)".
+- **Left out.** Mobile game bonuses, event banners that name no store, the referral card and the strip of upcoming Top Offers.
+- **Reminders.** Each entry keeps the store's site, read from its logo's address, so a reminder finds offers whose name doesn't match the site: "T-Mobile Home Internet" shows on t-mobile.com.
+- **Offers that drop off.** **Clean expired** removes an offer that a run more than 6 hours later didn't find. The first run after the update to one entry per rate removes each store's single entry from before.
+
+When it's done, the side panel says how many offers it saved, how many have an end date and how many it couldn't read. If it can't read a single reward in its first 15 seconds, it stops, saves nothing and says Capital One Shopping may have changed its page.
 
 ## Auto-add on sign-in
 
@@ -128,6 +146,7 @@ ChatGPT connects only to plugins hosted on the internet, so it can't use this on
 1. Add a record to `UOH_SOURCES` in `lib/sources.js` (id, name, colors, host patterns, landing URL).
 2. Add a `host.indexOf("site.com") > -1` branch in `content/scraper.js` that calls `saveOffer(key, merchant, value, "Site", { card, cardId, expiresTs, status })` for each offer.
 3. Add the site's host permission in `manifest.json`.
+4. In `background.js`, add the site's domain to `UOH_SOURCE_DOMAINS` (no reminder on the offer site itself) and its color to the reminder's `SOURCE_COLORS` (a test checks it matches). Add its name to `SOURCE_WORDS` in `lib/offers.js` and to the `source` list in `mcp/offer-hub-mcp.js`, so Ask AI and the plugin can filter by it.
 
 Pull requests are welcome at [github.com/pateljay134/Universal-Offer-Hub](https://github.com/pateljay134/Universal-Offer-Hub/).
 
@@ -155,11 +174,13 @@ content/chase-auto.js  Chase steps: the accounts page, Choose account, then Run 
 content/capitalone-auto.js  Capital One steps: View all offers on the home page, the card menu, then Run CapitalOne Autopilot on each card
 content/capitalone-main.js  from the page: View all offers opens in the run's tab; Capital One's card menu takes a pick only through React's own handlers, this plays one
 popup/                 toolbar popup
+sidepanel/             a run's panel in Chrome's side panel (Capital One Shopping), beside the page it reads
 dashboard/             full-page dashboard
 bookmarklets/          the original bookmarklet scripts
 mcp/offer-hub-mcp.js   the plugin: lets AI apps on this computer search offers.json (Node 18+, no dependencies)
 tests/                 node --test tests/*.test.js (no dependencies)
 tests/browser/         node tests/browser/chase-auto.check.js (and amex-auto.check.js, capitalone-auto.check.js): auto-add with the real autopilots on made-up pages in headless Chrome
+                       capitaloneshopping.check.js: Run CapitalOne Shopping Autopilot on a made-up home page that adds offers as it scrolls
 ```
 
 ## Saved data
@@ -168,8 +189,8 @@ Everything is in `chrome.storage.local`:
 
 | Key | What it holds |
 | --- | --- |
-| `UOH_Database` | Every offer, keyed `<source>_<card>_<merchant>`: merchant, offer text, source, card, expiry, status, first and last seen |
-| `UOH_Settings` | Toggles, card nicknames, card order and the Ask AI character |
+| `UOH_Database` | Every offer, keyed `<source>_<card>_<merchant>`: merchant, offer text, source, card, expiry, status, first and last seen, and for Capital One Shopping the store's site |
+| `UOH_Settings` | Toggles, card nicknames, card order, the Ask AI character and the minutes a Capital One Shopping run reads |
 | `UOH_AutoState` | Auto-add history (last run, per-card times) |
 | `UOH_Categories` | Categories saved for merchants the built-in lists don't cover |
 | `UOH_LiveFile` | Live copy status |
