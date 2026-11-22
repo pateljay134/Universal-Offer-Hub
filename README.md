@@ -6,7 +6,7 @@ A Chrome extension that adds every available card offer (Chase, American Express
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange.svg)
 ![Servers](https://img.shields.io/badge/servers-none-brightgreen.svg)
 
-**Latest version: 3.4.0 (22 Nov 2026).** What changed in each version: [CHANGELOG.md](./CHANGELOG.md).
+**Latest version: 3.4.1 (22 Nov 2026).** What changed in each version: [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 
@@ -60,6 +60,7 @@ The page keeps adding offers as you scroll, so the autopilot reads it as you wou
 **Auto-load when you open it (opt-in).** With **Auto-load Capital One Shopping offers when I open it** on in the popup (off by default), opening capitaloneshopping.com with its offers showing starts the same autopilot in a background tab (the grey **Offer Hub** tab group), on the home page, for the minutes chosen beside Run. That tab closes itself when it's done, at most once every 2 hours. Your own tab stays as it is: nothing is added to it, clicked or scrolled, and no note shows there; the popup and the toolbar icon say how the run went. A background tab draws nothing and the page gets no scroll events there, so in that tab the autopilot moves straight to where the offers end and sends the page the scroll event itself, which is what makes the page load its next batch. In a test on the live site, a hidden tab loaded a batch every 5 seconds this way, from 76 to 401 offers in 65 seconds. There are no cards to choose. **Stop** in the popup saves what was read first, and **Load offers in a background tab** in the popup on the site runs it now.
 
 - **Every rate.** A store can show several rates (2% in Rewards Offers, 4% in Exclusive Offers); each is an entry of its own, with the offer's own words ("Save at Walmart", an event's name) and its box's label ("Exclusive Offer") in the CSV's Badge column. The same rate in two boxes is one entry. Price Drop products aren't saved, but their rate counts for the store.
+- **Home Page Activation Bonus.** An offer such as "Get $100 back when you spend $330" (limit one per user) is saved as "$100 back when you spend $330", next to the store's other rates.
 - **Event rates.** A rate shown only with an end date, such as "Exclusive rates for next 1 day", expires when the event ends, counted to the end of that day.
 - **Open.** Each offer has an **Open** link in the popup and the dashboard. It opens the offer's own link from the page with what the page adds to it when you click the offer there, so the reward is activated the same way. Once that link has run out, or for an offer without one, it opens the store's page on Capital One Shopping instead. Each run saves fresh links.
 - **Caps.** Every offer ends in "($1,000 max)", so the hub drops that. Other caps stay: "Up to 7.5% back ($500 max)".

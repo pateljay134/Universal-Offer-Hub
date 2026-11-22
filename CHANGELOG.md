@@ -2,6 +2,10 @@
 
 What changed in each version, newest first. Your installed version is on the Universal Offer Hub card in `chrome://extensions`. To update, see [Install](./README.md#install). From 3.4.0 on, every update here gets a new version number.
 
+## 3.4.1 (22 Nov 2026)
+
+- Capital One Shopping: Home Page Activation Bonus offers ("Get $100 back when you spend $330") are now saved, next to the store's other rates. Before, only the store's regular rate was saved, and a store with only a bonus offer counted as couldn't read.
+
 ## 3.4.0 (22 Nov 2026)
 
 - New opt-in toggle, **Auto-load Capital One Shopping offers when I open it**: opening capitaloneshopping.com reads its offers in a background tab, and your own tab is left alone.
