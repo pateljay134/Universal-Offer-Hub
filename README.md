@@ -12,7 +12,7 @@ A Chrome extension that adds every available card offer (Chase, American Express
 
 - **One-click autopilots** for Chase, Amex, Capital One, Capital One Shopping, Walgreens and Safeway. Open the site, click the toolbar icon, press **Run**. Every offer it touches is saved to the hub, per card.
 - **Auto-add on sign-in (opt-in).** When you open Amex or Chase while signed in, it adds every offer to the cards you picked, in a background tab. For Capital One it loads and saves every offer on each card. Details below.
-- **Dashboard.** A full-page table of every active offer. Click a column title to sort; the ▾ beside it filters by card (an issuer's cards all at once, or one at a time), offer type, category or expiry. Views for New this week and Expiring soon, and card nicknames ("Mom Plat").
+- **Dashboard.** A full-page table of every active offer. Click a column title to sort; the funnel beside it filters by card (an issuer's cards all at once, or one at a time), offer type, category, source or expiry. Views for New this week and Expiring soon, and card nicknames ("Mom Plat").
 - **Ask AI.** A chat about your offers, answered by ChatGPT, Claude or Gemini with your own key (or by plain rules without one). Follow-ups such as "only Chase" or "as CSV" build on the last answer, and every reply lists all its matches.
 - **Use your offers in AI apps.** One click hands them to ChatGPT, Claude or Gemini in the browser, and a one-time setup lets the Claude Desktop app read them live. **Copy** takes any list you narrow down.
 - **Offer reminders.** Visit `adidas.com` or `bestbuy.com` and a small note lists the offers you already have there and which card holds them.
