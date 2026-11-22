@@ -2,6 +2,10 @@
 
 What changed in each version, newest first. Your installed version is on the Universal Offer Hub card in `chrome://extensions`. To update, see [Install](./README.md#install). From 3.4.0 on, every update here gets a new version number.
 
+## 3.4.2 (22 Nov 2026)
+
+- Capital One Shopping runs wait longer for a slow connection: 2.5 seconds after each batch of offers before scrolling on, and 30 seconds without new offers (instead of 5) before deciding the page has no more.
+
 ## 3.4.1 (22 Nov 2026)
 
 - Capital One Shopping: Home Page Activation Bonus offers ("Get $100 back when you spend $330") are now saved, next to the store's other rates. Before, only the store's regular rate was saved, and a store with only a bonus offer counted as couldn't read.
