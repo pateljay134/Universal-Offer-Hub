@@ -6,13 +6,15 @@ A Chrome extension that adds every available card offer (Chase, American Express
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange.svg)
 ![Servers](https://img.shields.io/badge/servers-none-brightgreen.svg)
 
+**Latest version: 3.4.0 (22 Nov 2026).** What changed in each version: [CHANGELOG.md](./CHANGELOG.md).
+
 ---
 
 ## What it does
 
 - **One-click autopilots** for Chase, Amex, Capital One, Capital One Shopping, Walgreens and Safeway. Open the site, click the toolbar icon, press **Run**. Every offer it touches is saved to the hub, per card.
-- **Auto-add on sign-in (opt-in).** When you open Amex or Chase while signed in, it adds every offer to the cards you picked, in a background tab. For Capital One it loads and saves every offer on each card. Details below.
-- **Dashboard.** A full-page table of every active offer. Click a column title to sort; the funnel beside it filters by card (an issuer's cards all at once, or one at a time), offer type, category, source or expiry. Views for New this week and Expiring soon, and card nicknames ("Mom Plat").
+- **Auto-add on sign-in (opt-in).** When you open Amex or Chase while signed in, it adds every offer to the cards you picked, in a background tab. For Capital One it loads and saves every offer on each card, and for Capital One Shopping every store's reward. Details below.
+- **Dashboard.** A full-page table of every active offer. Click a column title to sort; the funnel beside it filters by card (an issuer's cards all at once, one person's, or one card at a time), offer type, category, source or expiry. When Amex or Capital One names who is signed in, the card filter lists each issuer's cards by owner. Views for New this week and Expiring soon, and card nicknames ("Mom Plat").
 - **Ask AI.** A chat about your offers, answered by ChatGPT, Claude or Gemini with your own key (or by plain rules without one). Follow-ups such as "only Chase" or "as CSV" build on the last answer, and every reply lists all its matches.
 - **Use your offers in AI apps.** One click hands them to ChatGPT, Claude or Gemini in the browser, and a one-time setup lets the Claude Desktop app read them live. **Copy** takes any list you narrow down.
 - **Offer reminders.** Visit `adidas.com` or `bestbuy.com` and a small note lists the offers you already have there and which card holds them.
@@ -24,7 +26,7 @@ A Chrome extension that adds every available card offer (Chase, American Express
 - No server, no account, no analytics. Your offers live in Chrome (`chrome.storage.local`) and, if you turn on the live copy, in the folder you pick.
 - Ask AI: each question sends the AI you connected (OpenAI, Anthropic or Google) your question and the offers that match it: store, offer, card name and ending, expiry and category. Your key stays in this browser and goes only to its own company. With no AI connected, nothing leaves the browser.
 - Open AI chat and the Claude Desktop app work only when you use them. You give the chat site the file yourself, and Claude Desktop reads the live copy on your computer and sends what it looks up to Anthropic as part of your chat. Anything you copy into another app goes wherever that app sends it.
-- Auto-add opens the bank's own website (Amex, Chase or Capital One) in a background tab: the same pages you'd open yourself, with your existing sign-in.
+- Auto-add opens the site's own pages (Amex, Chase, Capital One or Capital One Shopping) in a background tab: the same pages you'd open yourself, with your existing sign-in.
 - Plain, unminified JavaScript. You install it unpacked from a folder you control, so it can't update itself behind your back.
 - The `<all_urls>` permission exists for offer reminders. The service worker reads only the hostname of the page you're on and compares it with your saved offers. Turn reminders off in the popup and it stops.
 
@@ -35,7 +37,7 @@ A Chrome extension that adds every available card offer (Chase, American Express
 3. Click **Load unpacked** and pick the extracted `Universal-Offer-Hub` folder.
 4. Pin the icon.
 
-To update, replace the folder's contents with a newer release and click the reload icon on the extension's card. Moving the folder or removing the extension deletes its saved offers; disabling it keeps them.
+To update, replace the folder's contents with a newer release and click the reload icon on the extension's card; [CHANGELOG.md](./CHANGELOG.md) says what changed. Moving the folder or removing the extension deletes its saved offers; disabling it keeps them.
 
 ## Use
 
@@ -53,7 +55,9 @@ Capital One Shopping (capitaloneshopping.com) is Capital One's shopping rewards 
 
 Open the home page signed in and click the toolbar icon. Beside **Run CapitalOne Shopping Autopilot**, choose how long it reads (5 minutes until you change it; the hub keeps your choice), then press Run. Its panel opens in Chrome's side panel, beside the page: the same status and counts as the other autopilots' panels, the time left and **Stop and save**. The toolbar icon shows how many stores it has read. Nothing of the hub goes on the page itself, because Capital One Shopping stops adding offers when something else is on its page: in tests on a signed-in home page, runs with the panel on the page ended after 88 to 598 offers, and without it a run read to the page's own end at 1,020.
 
-The page keeps adding offers as you scroll, so the autopilot reads it as you would: a quick swipe to where the offers end, a wait while the page loads its next batch of 25, and on. It doesn't go down to the store list and footer under the offers, because the page loads the next batch only while its last offers are on screen. If nothing new comes for 5 seconds, it looks around: down to the bottom of the page, then back up past the last 11 offers, at most twice. It stops when the page has no more offers to add, when its time is up (and says if the page was still adding offers, so you know to choose more minutes next time), or when you press **Stop and save**, and saves what it read. Keep the tab in front, because Chrome pauses pages in background tabs and nothing loads there. It doesn't press anything: you earn a reward by shopping through Capital One Shopping. Nothing runs on its own for this site.
+The page keeps adding offers as you scroll, so the autopilot reads it as you would: a quick swipe to where the offers end, a wait while the page loads its next batch of 25, and on. It doesn't go down to the store list and footer under the offers, because the page loads the next batch only while its last offers are on screen. If nothing new comes for 5 seconds, it looks around: down to the bottom of the page, then back up past the last 11 offers, at most twice. It stops when the page has no more offers to add, when its time is up (and says if the page was still adding offers, so you know to choose more minutes next time), or when you press **Stop and save**, and saves what it read. Keep the tab in front, because a background tab you open yourself loads nothing. It doesn't press anything: you earn a reward by shopping through Capital One Shopping.
+
+**Auto-load when you open it (opt-in).** With **Auto-load Capital One Shopping offers when I open it** on in the popup (off by default), opening capitaloneshopping.com with its offers showing starts the same autopilot in a background tab (the grey **Offer Hub** tab group), on the home page, for the minutes chosen beside Run. That tab closes itself when it's done, at most once every 2 hours. Your own tab stays as it is: nothing is added to it, clicked or scrolled, and no note shows there; the popup and the toolbar icon say how the run went. A background tab draws nothing and the page gets no scroll events there, so in that tab the autopilot moves straight to where the offers end and sends the page the scroll event itself, which is what makes the page load its next batch. In a test on the live site, a hidden tab loaded a batch every 5 seconds this way, from 76 to 401 offers in 65 seconds. There are no cards to choose. **Stop** in the popup saves what was read first, and **Load offers in a background tab** in the popup on the site runs it now.
 
 - **Every rate.** A store can show several rates (2% in Rewards Offers, 4% in Exclusive Offers); each is an entry of its own, with the offer's own words ("Save at Walmart", an event's name) and its box's label ("Exclusive Offer") in the CSV's Badge column. The same rate in two boxes is one entry. Price Drop products aren't saved, but their rate counts for the store.
 - **Event rates.** A rate shown only with an end date, such as "Exclusive rates for next 1 day", expires when the event ends, counted to the end of that day.
@@ -67,7 +71,7 @@ When it's done, the side panel says how many offers it saved, how many have an e
 
 ## Auto-add on sign-in
 
-Each bank has a toggle in the popup: **Auto-add Amex offers when I sign in**, **Auto-add Chase offers when I sign in** and **Auto-load Capital One offers when I sign in**. All are off by default; while one is off, nothing runs on its own for that bank. The **Cards** link on each toggle's line opens **Cards** in the dashboard at that bank's cards.
+Each bank has a toggle in the popup: **Auto-add Amex offers when I sign in**, **Auto-add Chase offers when I sign in** and **Auto-load Capital One offers when I sign in**. All are off by default; while one is off, nothing runs on its own for that bank. The **Cards** link on each toggle's line opens **Cards** in the dashboard at that bank's cards. Capital One Shopping has a toggle too (see Capital One Shopping above).
 
 - **What it does.** When you open that bank's site while signed in, Offer Hub opens its offers page in a background tab (a small grey **Offer Hub** tab group at the end of your tabs) and runs that bank's **Run … Autopilot** on each card, top card first. It is the popup button's own code: it clicks **+** on every offer, then reads the card's Added list (Capital One's loads and saves every offer instead). The tab closes itself when it's done. Stay signed in until then.
 - **The first time on a login, you choose.** Offer Hub reads only that login's list of cards, then opens **Cards** on its own. Leave **Add** on for the cards that should get offers and press **Confirm and add offers**. Adding starts right away.
@@ -84,6 +88,8 @@ The popup's **Run Amex Autopilot**, **Run Chase Autopilot** and **Run CapitalOne
 - **Where it starts.** On any Amex page that shows your cards: the card in the account switcher, or the accounts listed on **Overview**, where Amex lands after you sign in. Moving between Amex pages counts too.
 - **Why the order matters.** Since August 2026, Amex keeps each offer on one card per login: add it to one card and it disappears from your others. So the top card gets every offer it has, the next card gets what's left, and so on. Set the order in **Cards** by dragging (or with the arrows).
 - **Which accounts.** Credit and charge cards, including business cards. It skips checking, savings, loans, Business Blueprint and canceled accounts.
+- **Whose cards.** Auto-add's own tab opens your Profile page first: its "Select Card Member Account" list names each card's member by Amex's id for the card, and who is signed in. Then it goes on to the offers page. Overview's greeting ("Good morning, …") names who is signed in too. Pages you open yourself are only read, never clicked or moved. The card filter then lists Amex cards by owner.
+- **Cards with the same last digits.** Each card is kept under Amex's own id for it, not its last digits, so two cards that end the same (yours, or one in a family member's login) keep their own offers, nickname and place in the order. Offers saved before this move to the card's id the first time it runs.
 - **When Amex changes its pages.** Offers are read from the page's layout and text, not from Amex's style names, which it renames now and then. Each card's **Added to Card (N)** count is checked against what was read. If some offers can't be read, the run says how many it got (for example, "Read 0 of the 120 offers on this card's Added page") in the popup's last-run line instead of finishing as if all went well.
 
 ### Chase
@@ -100,7 +106,7 @@ The popup's **Run Amex Autopilot**, **Run Chase Autopilot** and **Run CapitalOne
 - **Loads, doesn't add.** Run CapitalOne Autopilot loads every offer on a card ("View More Offers" until there are no more) and saves it to the hub. It doesn't activate any offer, so the card-linked offers in Capital One's **Added to Card** box stay as they are. Auto-load runs the same code on each card, and the run's summary says how many offers it saved.
 - **Where it runs.** Signing in at myaccounts.capitalone.com starts it. The run opens your Capital One home page in the background tab and presses **View all offers** in its shopping box, which opens Capital One Offers (capitaloneoffers.com/feed?viewInstanceId=…) with your existing sign-in. Opened directly, without that address, Capital One Offers shows its sign-in page or an empty page. If pressing the button leaves the tab where it was, the run opens the address the box's offers name. Opening Capital One Offers yourself doesn't start a run.
 - **Which cards.** Everything in the card menu at the top of Capital One Offers ("Apply my offer to:"), Discover cards included. Each card has its own offers, so the order in **Cards** only sets which card is listed first.
-- **Opening each card.** Offer Hub picks the card in that menu, waits until the page names it and shows its offers, then starts the autopilot. Capital One ignores a pick made with events a script sends, so Offer Hub plays the click through the page's own React handlers, as Run CapitalOne Autopilot does for "View More Offers". The autopilot saves offers under the card the page names when it starts, so if the page never names the card, Offer Hub skips it rather than save its offers under another card, and the run's notes say what was tried. Two cards ending in the same 4 digits share one place in the hub, so they're run once.
+- **Opening each card.** Offer Hub picks the card in that menu, waits until the page names it and shows its offers, then starts the autopilot. Capital One ignores a pick made with events a script sends, so Offer Hub plays the click through the page's own React handlers, as Run CapitalOne Autopilot does for "View More Offers". The autopilot saves offers under the card the page names when it starts, so if the page never names the card, Offer Hub skips it rather than save its offers under another card, and the run's notes say what was tried. Capital One Offers names a card only by its last 4, so Offer Hub reads each card's Capital One id from the account tiles on your home page and keeps the card's offers under it (as a fingerprint, never shown), so two people's cards that end the same stay apart. Two of one login's cards that end the same can't be told apart there, so they're run once.
 
 ## Use your offers with AI
 
@@ -154,6 +160,7 @@ Pull requests are welcome at [github.com/pateljay134/Universal-Offer-Hub](https:
 
 ```
 manifest.json
+CHANGELOG.md           what changed in each version
 background.js          service worker: offer reminders, the one writer of saved data, auto-add host
 lib/sources.js         supported sites (popup detection, colors)
 lib/offers.js          shared helpers: search, parsing, expiry, card labels, exports
@@ -162,17 +169,19 @@ lib/autorun.js         auto-add: the background tab, its jobs, card order and ti
 lib/issuers/amex.js    what Amex auto-add needs: its pages, how cards are read, its autopilot's pace
 lib/issuers/chase.js   the same for Chase, plus the readers for its account and offer labels
 lib/issuers/capitalone.js  the same for Capital One, plus the readers for its card labels
+lib/issuers/capitaloneshopping.js  the same for Capital One Shopping: no cards, one run of its autopilot
 lib/livefile.js        the live copy: offers.json / offers.csv in the folder you pick
 lib/ai.js              Ask AI: ChatGPT, Claude or Gemini (dashboard)
 lib/mcpb.js            builds the Claude Desktop plugin file, Offer Hub.mcpb (dashboard)
 lib/theme.css          shared look
-content/scraper.js     the per-site autopilots (page context); auto-add runs the Amex and Chase ones too
+content/scraper.js     the per-site autopilots (page context); auto-add runs the bank and Capital One Shopping ones too
 content/bridge.js      passes autopilot saves to the service worker
 content/auto-core.js   auto-add in the page, for every bank: the background tab's link to the service worker, running the bank's autopilot step by step, notes in your tab
 content/amex-auto.js   Amex steps: read and switch cards, then Run Amex Autopilot
 content/chase-auto.js  Chase steps: the accounts page, Choose account, then Run Chase Autopilot with its two waits
 content/capitalone-auto.js  Capital One steps: View all offers on the home page, the card menu, then Run CapitalOne Autopilot on each card
 content/capitalone-main.js  from the page: View all offers opens in the run's tab; Capital One's card menu takes a pick only through React's own handlers, this plays one
+content/capitaloneshopping-auto.js  Capital One Shopping steps: wait for the offers, then Run CapitalOne Shopping Autopilot; nothing goes on either page
 popup/                 toolbar popup
 sidepanel/             a run's panel in Chrome's side panel (Capital One Shopping), beside the page it reads
 dashboard/             full-page dashboard
@@ -180,7 +189,7 @@ bookmarklets/          the original bookmarklet scripts
 mcp/offer-hub-mcp.js   the plugin: lets AI apps on this computer search offers.json (Node 18+, no dependencies)
 tests/                 node --test tests/*.test.js (no dependencies)
 tests/browser/         node tests/browser/chase-auto.check.js (and amex-auto.check.js, capitalone-auto.check.js): auto-add with the real autopilots on made-up pages in headless Chrome
-                       capitaloneshopping.check.js: Run CapitalOne Shopping Autopilot on a made-up home page that adds offers as it scrolls
+                       capitaloneshopping.check.js: Run CapitalOne Shopping Autopilot on a made-up home page that adds offers as it scrolls, and auto-load in a hidden background tab
 ```
 
 ## Saved data
@@ -189,13 +198,15 @@ Everything is in `chrome.storage.local`:
 
 | Key | What it holds |
 | --- | --- |
-| `UOH_Database` | Every offer, keyed `<source>_<card>_<merchant>`: merchant, offer text, source, card, expiry, status, first and last seen, and for Capital One Shopping the store's site |
-| `UOH_Settings` | Toggles, card nicknames, card order, the Ask AI character and the minutes a Capital One Shopping run reads |
+| `UOH_Database` | Every offer, keyed `<source>_<card>_<merchant>` (the card: Amex's own id for it, Chase's account id, Capital One's last 4): merchant, offer text, source, card, expiry, status, first and last seen, and for Capital One Shopping the store's site |
+| `UOH_Settings` | Toggles, card nicknames, card owners, card order, the Ask AI character and the minutes a Capital One Shopping run reads |
 | `UOH_AutoState` | Auto-add history (last run, per-card times) |
 | `UOH_Categories` | Categories saved for merchants the built-in lists don't cover |
 | `UOH_LiveFile` | Live copy status |
 | `UOH_AIConfig` | Ask AI: the AI in use, your keys and chosen models (never exported) |
 | `UOH_LastRunCount`, `UOH_LastRunAt`, `UOH_UIState` | Last autopilot run and popup filters |
+
+While Chrome is open, `chrome.storage.session` also holds what each bank's home page showed this session: who is signed in and, for Capital One, each account's last 4 with its fingerprint. Chrome clears it when it closes.
 
 **Clear all** in the popup deletes every saved offer, the last auto-add summary and the categories, and empties the live copy. Settings, nicknames, card order, the 2-hour auto-add timers and your Ask AI keys stay.
 
