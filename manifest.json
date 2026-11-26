@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Universal Offer Hub",
+  "version": "2.2.2",
+  "description": "Auto-detects supported card / store sites and runs the right offer autopilot. All offers are saved locally to a cross-source searchable hub. No network calls. No sign-up.",
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "host_permissions": [
+    "*://*.chase.com/*",
+    "*://*.americanexpress.com/*",
+    "*://*.capitalone.com/*",
+    "*://*.capitaloneoffers.com/*",
+    "*://*.capitaloneshopping.com/*",
+    "*://*.walgreens.com/*",
+    "*://*.citi.com/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Universal Offer Hub"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.americanexpress.com/offers/enrolled*"],
+      "js": ["content/bridge.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.americanexpress.com/offers/enrolled*"],
+      "js": ["content/scraper.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ]
+}
